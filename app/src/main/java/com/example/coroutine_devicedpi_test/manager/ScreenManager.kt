@@ -1,4 +1,4 @@
-package com.example.coroutine_devicedpi_test
+package com.example.coroutine_devicedpi_test.manager
 
 import android.app.Activity
 import android.os.Build

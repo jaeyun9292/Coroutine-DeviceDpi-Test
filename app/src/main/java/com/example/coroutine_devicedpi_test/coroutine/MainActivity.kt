@@ -1,26 +1,59 @@
-package com.example.coroutine_devicedpi_test
+package com.example.coroutine_devicedpi_test.coroutine
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.coroutine_devicedpi_test.manager.MetricsManager
+import com.example.coroutine_devicedpi_test.R
+import com.example.coroutine_devicedpi_test.manager.ScreenManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
+
+
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val screenManager = ScreenManager(this)
         screenManager.setFullScreen()
 
+        val metricsManager = MetricsManager()
+        metricsManager.getMetrics(windowManager, this)
+
         val testTv: TextView = findViewById(R.id.test_tv)
         testTv.text = resources.getInteger(R.integer.test_value).toString()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            repeat(100) {
+                Log.e(TAG, "1",)
+                delay(100)
+            }
+            testTv.setBackgroundColor(R.color.purple_700)
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repeat(100) {
+                Log.e(TAG, "2",)
+                delay(100)
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repeat(100) {
+                Log.e(TAG, "3",)
+                delay(100)
+            }
+        }
 
         // 스코프 함수
 //        val p1 = Person("jaeyun", 26)
@@ -57,8 +90,6 @@ class MainActivity : AppCompatActivity() {
 //        println("name: ${p1.name} age: ${p1.age}")
 
 
-
-
 //        CoroutineScope(Dispatchers.IO).launch {
 //            withContext(Dispatchers.Main) { launch { test(0) } }
 //            launch { test(1) }
@@ -81,21 +112,22 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val time = measureTimeMillis {
-                launch {
-                    test(1)
-                }
-                launch {
-                    test(2)
-                }
-                launch {
-                    test(3)
-                }
-                test(0)
-            }
-            Log.e(TAG, "1 - Time : $time")
-        }
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val time = measureTimeMillis {
+//                launch {
+//                    test(1)
+//                }
+//                launch {
+//                    test(2)
+//                }
+//                launch {
+//                    test(3)
+//                }
+//                test(0)
+//            }
+//            Log.e(TAG, "1 - Time : $time")
+//        }
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            val time = measureTimeMillis {
@@ -103,6 +135,22 @@ class MainActivity : AppCompatActivity() {
 //                test(2)
 //            }
 //            Log.e(TAG, "2 - Time : $time")
+//        }
+
+//        val testCoroutine = CoroutineScope(Dispatchers.IO)
+//
+//        val ioDispatcher = Dispatchers.IO
+//
+//
+//        GlobalScope.launch {
+//            repeat(10) {
+//                test(1)
+//            }
+//        }
+//        GlobalScope.launch {
+//            repeat(10) {
+//                test(2)
+//            }
 //        }
     }
 
@@ -123,7 +171,7 @@ class MainActivity : AppCompatActivity() {
 
     suspend fun test(index: Int) {
         delay(1000)
-        Log.e(TAG, "index: $index  |  currentThread : ${Thread.currentThread().name}")
+//        Log.e(TAG, "index: $index  |  currentThread : ${Thread.currentThread().name}")
     }
 
 }
